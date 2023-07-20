@@ -17,7 +17,7 @@ const options = {
   minuteIncrement: 1,
 
   intervalId: null,
-  isActive: false,
+  isActiveStart: false,
 
   onClose(selectedDates) {
     console.dir(selectedDates[0]);
@@ -31,24 +31,24 @@ const options = {
 
     startBtn.addEventListener('click', () => {
       startBtn.disabled = true;
-      if (this.isActive) {
+      if (this.isActiveStart) {
         return;
       }
-      this.isActive = true;
+      this.isActiveStart = true;
       this.intervalId = setInterval(() => {
         const currentTime = Date.now();
         const deltaTime = selectedDates[0] - currentTime;
 
         if (deltaTime < 0) {
-          Notify.info('Its finish. Reboot page');
+          Notify.info('Its finish. Restart page');
           clearInterval(this.intervalId);
-          this.isActive = false;
+          this.isActiveStart = false;
           return;
         }
 
-        const time = convertMs(deltaTime);
-        console.log(time);
-        updateClockface(time);
+        const timer = convertMs(deltaTime);
+        console.log(timer);
+        updateTimerface(timer);
       }, 1000);
     });
   },
@@ -56,7 +56,7 @@ const options = {
 
 flatpickr('#datetime-picker', options);
 
-function updateClockface({ days, hours, minutes, seconds }) {
+function updateTimerface({ days, hours, minutes, seconds }) {
   daysField.textContent = addLeadingZero(`${days}`);
   hoursField.textContent = addLeadingZero(`${hours}`);
   minutesField.textContent = addLeadingZero(`${minutes}`);
