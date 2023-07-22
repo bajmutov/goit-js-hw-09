@@ -11,7 +11,7 @@ function handleSubmit(event) {
   } = event.currentTarget;
   console.log(delay.value, step.value, amount.value);
 
-  for (let i = 1; i <= amount.value; i += 1) {
+  for (let i = 0; i < amount.value; i += 1) {
     setTimeout(createPromise, delay.value, i, step.value, delay.value);
   }
 
@@ -24,7 +24,7 @@ function createPromise(position, step, delay) {
     if (shouldResolve) {
       return Promise.resolve(
         Notify.success(
-          `✅ Fulfilled promise ${position} in ${
+          `✅ Fulfilled promise ${position + 1} in ${
             Number(delay) + position * step
           } ms`
         )
@@ -32,7 +32,7 @@ function createPromise(position, step, delay) {
     } else {
       return Promise.reject(
         Notify.failure(
-          `❌ Rejected promise ${position} in ${
+          `❌ Rejected promise ${position + 1} in ${
             Number(delay) + position * step
           } ms`
         )
