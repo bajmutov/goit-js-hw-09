@@ -14,7 +14,6 @@ let intervalId = null;
 let userTime = null;
 
 startBtn.disabled = true;
-// inputTime.disabled = true; перед flatpickr працює disabled
 
 flatpickr('#datetime-picker', {
   enableTime: true,
@@ -40,7 +39,7 @@ stopBtn.addEventListener('click', onClickStopTimer);
 
 function onClickStartTimer() {
   inputTime.disabled = true;
-  console.log(inputTime); // чому не працює disabled ?
+  console.log(inputTime);
   startBtn.disabled = true;
 
   intervalId = setInterval(() => {
