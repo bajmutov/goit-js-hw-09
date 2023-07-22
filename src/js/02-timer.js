@@ -3,21 +3,24 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const startBtn = document.querySelector('button[data-start]');
+const stopBtn = document.querySelector('button[data-stop]');
+const inputTime = document.querySelector('#datetime-picker');
 const daysField = document.querySelector('[data-days]');
 const hoursField = document.querySelector('[data-hours]');
 const minutesField = document.querySelector('[data-minutes]');
 const secondsField = document.querySelector('[data-seconds]');
 
-startBtn.disabled = true;
+let intervalId = null;
+let userTime = null;
 
-const options = {
+startBtn.disabled = true;
+// inputTime.disabled = true; перед flatpickr працює disabled
+
+flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-
-  intervalId: null,
-  isActiveStart: false,
 
   onClose(selectedDates) {
     console.dir(selectedDates[0]);
@@ -27,34 +30,43 @@ const options = {
       Notify.failure('Please choose a date in the future');
       return;
     }
+    userTime = selectedDates[0];
     startBtn.disabled = false;
-
-    startBtn.addEventListener('click', () => {
-      startBtn.disabled = true;
-      if (this.isActiveStart) {
-        return;
-      }
-      this.isActiveStart = true;
-      this.intervalId = setInterval(() => {
-        const currentTime = Date.now();
-        const deltaTime = selectedDates[0] - currentTime;
-
-        if (deltaTime < 0) {
-          Notify.info('Its finish. Restart page');
-          clearInterval(this.intervalId);
-          this.isActiveStart = false;
-          return;
-        }
-
-        const timer = convertMs(deltaTime);
-        console.log(timer);
-        updateTimerface(timer);
-      }, 1000);
-    });
   },
-};
+});
 
-flatpickr('#datetime-picker', options);
+startBtn.addEventListener('click', onClickStartTimer);
+stopBtn.addEventListener('click', onClickStopTimer);
+
+function onClickStartTimer() {
+  inputTime.disabled = true;
+  console.log(inputTime); // чому не працює disabled ?
+  startBtn.disabled = true;
+
+  intervalId = setInterval(() => {
+    const currentTime = Date.now();
+    const deltaTime = userTime - currentTime;
+
+    if (deltaTime < 0) {
+      Notify.info('Its finish. Choose another date');
+      clearInterval(intervalId);
+      return;
+    }
+
+    const timer = convertMs(deltaTime);
+    console.log(timer);
+    updateTimerface(timer);
+  }, 1000);
+}
+
+function onClickStopTimer() {
+  clearInterval(intervalId);
+  inputTime.disabled = false;
+  startBtn.disabled = true;
+  timer = convertMs(0);
+  updateTimerface(timer);
+  Notify.info('You stop timer. Choose another date');
+}
 
 function updateTimerface({ days, hours, minutes, seconds }) {
   daysField.textContent = addLeadingZero(`${days}`);
