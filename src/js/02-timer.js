@@ -63,7 +63,7 @@ function onClickStopTimer() {
   clearInterval(intervalId);
   inputTime.disabled = false;
   startBtn.disabled = true;
-  timer = convertMs(0);
+  const timer = convertMs(0);
   updateTimerface(timer);
   Notify.info('You stop timer. Choose another date');
 }
