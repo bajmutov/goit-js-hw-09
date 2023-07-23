@@ -11,6 +11,12 @@ function handleSubmit(event) {
   } = event.currentTarget;
   console.log(delay.value, step.value, amount.value);
 
+  
+  if (delay.value < 0 || amount.value < 0 || step.value < 0) {
+       Notify.failure(`❌❌ Incorrect input values.❌❌`);
+      return;
+  }
+  
   for (let i = 1; i <= amount.value; i += 1) {
     createPromise(i, delay.value)
       .then(({ position, delay }) => {
@@ -21,8 +27,8 @@ function handleSubmit(event) {
         Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
     delay.value = Number(delay.value) + Number(step.value);
-    console.log(delay.value);
   }
+  
   event.currentTarget.reset();
 }
 
