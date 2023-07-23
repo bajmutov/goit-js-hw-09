@@ -12,7 +12,7 @@ function handleSubmit(event) {
   console.log(delay.value, step.value, amount.value);
 
   
-  if (delay.value < 0 || amount.value < 0 || step.value < 0) {
+  if (delay.value < 0 || amount.value <= 0 || step.value < 0) {
        Notify.failure(`❌❌ Incorrect input values.❌❌`);
       return;
   }
